@@ -9,6 +9,7 @@ import cors from 'cors'
 
 
 import pedidosRoutes from './routes/pedidosRoute.js';
+import healthRoutes from './routes/healthRoute.js';
 
 const force = false;  //reiniciar db
 const alter = false; //aplicar cambios en estructura
@@ -41,6 +42,7 @@ app.use(express.urlencoded({ extended: true })); // Soporte para datos de formul
 
 
 app.use('/api', pedidosRoutes);
+app.use('/health', healthRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
