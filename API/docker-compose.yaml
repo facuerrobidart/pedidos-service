@@ -1,0 +1,50 @@
+version: '3.8'
+
+name: pedidos-api
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pedidos-postgres
+    environment:
+      POSTGRES_USER: localuser
+      POSTGRES_PASSWORD: localpass
+      POSTGRES_DB: deposito_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pedidos-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: pedidos-rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"   # AMQP protocol port
+      - "15672:15672" # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - pedidos-network
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_port_connectivity"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  postgres_data:
+  rabbitmq_data:
+
+networks:
+  pedidos-network:
+    driver: bridge
