@@ -1,10 +1,11 @@
-
+import serviceMethods from '../services/pedidoService.js'
 
 //Metodos relacionados al deposito
 
 export const getAllPedidosDeposito = async (req, res) => {
     try{
-
+        const pedidos = await serviceMethods.getAllPedidosDeposito();
+        res.json(pedidos);
     }catch (error) {
         console.error("Error al obtener pedidos del depósito:", error);
         res.status(500).json({ message: "Error interno del servidor", error: error.message });

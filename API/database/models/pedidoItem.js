@@ -19,5 +19,3 @@ export default (sequelize, DataTypes) => {
         }
     })
 }
-
-//?No se si agregar tambien una descripción del producto o una imagen. Onda, por si les sirve a los del deposito o los repartidores.
