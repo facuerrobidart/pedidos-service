@@ -1,7 +1,3 @@
-import { promises as fs } from 'fs';
-import path from 'path';
-import Pool from 'pg';
-import { Op } from 'sequelize';
 import db from '../database/index.js';
 
 const {Pedido, PedidoItem} = db;
