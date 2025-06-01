@@ -31,9 +31,15 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
   
-      - name: Build and push
-        run: npm run build
-        working-directory: ./API
+      - name: Build and push Docker image to GHCR
+        uses: docker/build-push-action@v5
+        with:
+          context: ./API
+          file: ./API/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            ${{ env.IMAGE_NAME }}:latest
       
       - name: Set lowercase image name
         run: |
