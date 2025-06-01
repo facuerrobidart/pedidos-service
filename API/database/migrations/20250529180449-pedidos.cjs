@@ -52,7 +52,7 @@ module.exports = {
         allowNull: false,
         references: {
           model: 'Pedidos',
-          key: 'idPedido'
+          key: 'id'
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE'
