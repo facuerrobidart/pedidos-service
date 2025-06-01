@@ -5,7 +5,10 @@ import pedidoDeliveryDTO from '../DTOs/pedidoDeliveryDTO.js';
 export const getAllPedidos = async (estado) => {
     try {
         const pedidos = await repositoryMethods.getAllPedidos(estado);
-        return pedidos.map(pedido => new pedidoDepositoDTO(pedido));
+        if(estado === 'Confirmado') {
+            return pedidos.map(pedido => new pedidoDepositoDTO(pedido));   
+        }
+        return pedidos.map(pedido => new pedidoDeliveryDTO(pedido));
     } catch (error) {
         console.error("Error al obtener pedidos del depósito:", error);
         throw new Error("Error interno del servidor: " + error.message);

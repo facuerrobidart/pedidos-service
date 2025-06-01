@@ -8,13 +8,40 @@ const {Pedido, PedidoItem} = db;
 
 const getAllPedidos = async (estado) => {
     try{
-        return await Pedido.findAll({
-            where: {estado},
-            include: [{
-                model: PedidoItem,
-                as: 'items'
-            }]
-        });
+        const pedidos = await Pedido.findAll({
+                where: {estado},
+                include: [{
+                    model: PedidoItem,
+                    as: 'items'
+                }]
+            });
+
+        if(estado === 'Confirmado'){
+            return pedidos.map(pedido => {
+                return {
+                    id: pedido.id,
+                    estado: pedido.estado,
+                    timestamp: pedido.createdAt,
+                    items: pedido.items,
+                };
+            });
+        }else if(estado === 'Listo para enviar'){
+            return pedidos.map(pedido => {
+                return {
+                    id: pedido.id,
+                    estado: pedido.estado,
+                    timestamp: pedido.createdAt,
+                    cliente: {
+                        name: pedido.nombreCliente, 
+                        direccion: pedido.direccionEntrega,
+                        ciudad: pedido.ciudad,
+                        telefono: pedido.telefonoCliente
+                    },
+                    items: pedido.items 
+                };
+            });
+        }
+
     }catch (error) {
         console.error("Error al obtener pedidos del depósito:", error);
         throw new Error("Error interno del servidor: " + error.message);
