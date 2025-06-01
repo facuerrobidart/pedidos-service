@@ -79,7 +79,6 @@ export const getAllPedidos = async (estado) => {
     }
 }
 
-//? En este caso no inclui el timestamp, no lo considere necesario a diferencia del metodo anterior, donde ordenarías en base a la fecha de creación del pedido
 export const getPedido = async (id) => {
     try{
         const pedido = await Pedido.findByPk(id, {

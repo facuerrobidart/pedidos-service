@@ -19,6 +19,8 @@ router.route('/delivery')
   .get(metodosPedidos.getAllPedidosDelivery) // Obtener todos los pedidos disponibles para delivery
 
 router.route('/delivery/:id')
+  .get(metodosPedidos.getPedidoById) // Obtener un pedido específico por ID
+
   .post(metodosPedidos.postPedido) //Asigna un repartidor a un pedido
   
   .patch(metodosPedidos.patchEstadoPedido); // Modificar el estado de un pedido en delivery
