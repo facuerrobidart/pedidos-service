@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
     return sequelize.define('Pedido', {
-        idPedido: {     //?No sabría si deberiamos darle el id de VirtualPet o si simplemente le damos uno nuevo aca.
+        id: {     //?No sabría si deberiamos darle el id de VirtualPet o si simplemente le damos uno nuevo aca.
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: false    //? Pongo falso asumiendo que traemos el id de VirtualPet.

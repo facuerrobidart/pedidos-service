@@ -1,6 +1,6 @@
 export default (sequelize, DataTypes) => {
     return sequelize.define('PedidoItem',{
-        idPedidoItem:{
+        id:{
             type: DataTypes.INTEGER,
             primaryKey: true,
             autoIncrement: true
