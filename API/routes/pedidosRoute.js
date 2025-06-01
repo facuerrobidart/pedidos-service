@@ -6,19 +6,21 @@ const router = express.Router();
 //Rutas relacionadas al deposito
 
 router.route('/deposito')
-  .get(metodosPedidos.getAllPedidosDeposito(req, res)) // Obtener todos los pedidos en el depósito
+  .get(metodosPedidos.getAllPedidosDeposito) // Obtener todos los pedidos en el depósito
 
-  .get('/:id', metodosPedidos.getPedidoById(req, res)) // Obtener un pedido específico por ID
+router.route('/deposito/:id')
+  .get(metodosPedidos.getPedidoById) // Obtener un pedido específico por ID
 
-  .patch('/:id', metodosPedidos.patchEstadoPedido(req, res)); // Modificar el estado de un pedido en el depósito
+  .patch(metodosPedidos.patchEstadoPedido); // Modificar el estado de un pedido en el depósito
 
 //Rutas relacionadas al delivery
 
 router.route('/delivery')
-  .get(metodosPedidos.getAllPedidosDelivery(req, res)) // Obtener todos los pedidos disponibles para delivery
+  .get(metodosPedidos.getAllPedidosDelivery) // Obtener todos los pedidos disponibles para delivery
 
-  .post('/:id', metodosPedidos.postPedido(req, res)) //Asigna un repartidor a un pedido
+router.route('/delivery/:id')
+  .post(metodosPedidos.postPedido) //Asigna un repartidor a un pedido
   
-  .patch('/:id', metodosPedidos.patchEstadoPedido(req, res)); // Modificar el estado de un pedido en delivery
+  .patch(metodosPedidos.patchEstadoPedido); // Modificar el estado de un pedido en delivery
 
 export default router;

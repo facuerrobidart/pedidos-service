@@ -1,4 +1,4 @@
-import serviceMethods from '../services/pedidoService.js'
+import serviceMethods from '../services/pedidosService.js'
 
 //Metodos relacionados al deposito
 
