@@ -15,22 +15,6 @@ export const getAllPedidosDeposito = async (req, res) => {
     }
 }
 
-export const getPedidoById = async (req, res) => {
-    try{
-        const { id } = req.params;
-        console.log("ID del pedido recibido:", id);
-        const pedido = await serviceMethods.getPedidoById(id);
-        if (!pedido) {
-            return res.status(404).json({ message: "Pedido no encontrado" });
-        }
-        res.json(pedido);
-
-    }catch (error) {
-        console.error("Error al obtener el pedido por ID:", error);
-        res.status(500).json({ message: "Error interno del servidor", error: error.message });
-    }
-}
-
 // Metodos relacionados al delivery
 
 export const getAllPedidosDelivery = async (req, res) => {
@@ -53,6 +37,22 @@ export const postPedido = async (req, res) => {
 }
 
 //Metodos comunes a ambos
+
+export const getPedidoById = async (req, res) => {
+    try{
+        const { id } = req.params;
+        console.log("ID del pedido recibido:", id);
+        const pedido = await serviceMethods.getPedidoById(id);
+        if (!pedido) {
+            return res.status(404).json({ message: "Pedido no encontrado" });
+        }
+        res.json(pedido);
+
+    }catch (error) {
+        console.error("Error al obtener el pedido por ID:", error);
+        res.status(500).json({ message: "Error interno del servidor", error: error.message });
+    }
+}
 
 export const patchEstadoPedido = async (req, res) => {
     try{
