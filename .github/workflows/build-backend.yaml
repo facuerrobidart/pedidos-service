@@ -30,20 +30,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-  
-      - name: Build and push Docker image to GHCR
-        uses: docker/build-push-action@v5
-        with:
-          context: ./API
-          file: ./API/Dockerfile
-          push: true
-          tags: |
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:latest
-      
-      - name: Set lowercase image name
-        run: |
-          echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/virtual-pet-backend" >> $GITHUB_ENV
       
       - name: Build and push Docker image to GHCR
         uses: docker/build-push-action@v5
@@ -55,23 +41,23 @@ jobs:
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
             ${{ env.IMAGE_NAME }}:latest
 
-            - name: Deploy Bicep to Azure
-            uses: azure/arm-deploy@v1
-            with:
-              subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-              resourceGroupName: virtual-pet-backend
-              template: ./API/infra/main.bicep
-              parameters: >
-                appName=virtual-pet-api-${{ github.run_id }}
-                dockerImage=${{ env.IMAGE_NAME }}:${{ github.sha }}
-                dbUser=${{ secrets.DB_USER }}
-                dbPassword=${{ secrets.DB_PASSWORD }}
-                dbName=${{ secrets.DB_NAME }}
-                dbHost=${{ secrets.DB_HOST }}
-                rabbitmqUser=${{ secrets.RABBITMQ_USER }}
-                rabbitmqPassword=${{ secrets.RABBITMQ_PASSWORD }}
-                rabbitmqHost=${{ secrets.RABBITMQ_HOST }}
-                rabbitmqPort=${{ secrets.RABBITMQ_PORT }}
-                rabbitmqQueue=deliveries-queue
+      - name: Deploy Bicep to Azure
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: virtual-pet-backend
+          template: ./API/infra/main.bicep
+          parameters: >
+            appName=virtual-pet-api-${{ github.run_id }}
+            dockerImage=${{ env.IMAGE_NAME }}:${{ github.sha }}
+            dbUser=${{ secrets.DB_USER }}
+            dbPassword=${{ secrets.DB_PASSWORD }}
+            dbName=${{ secrets.DB_NAME }}
+            dbHost=${{ secrets.DB_HOST }}
+            rabbitmqUser=${{ secrets.RABBITMQ_USER }}
+            rabbitmqPassword=${{ secrets.RABBITMQ_PASSWORD }}
+            rabbitmqHost=${{ secrets.RABBITMQ_HOST }}
+            rabbitmqPort=${{ secrets.RABBITMQ_PORT }}
+            rabbitmqQueue=deliveries-queue
 
         
