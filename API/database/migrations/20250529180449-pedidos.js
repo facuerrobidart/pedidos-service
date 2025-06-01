@@ -3,10 +3,10 @@
 module.exports = {
  up:async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Pedidos', {
-      idPedido: {
+      id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: false,
+        autoIncrement: false,  //?El id debería venir de virtual pet?
         allowNull: false
       },
       nombreCliente: {
@@ -41,7 +41,7 @@ module.exports = {
     });
 
     await queryInterface.createTable('PedidoItems', {
-      idPedidoItem: {
+      id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true,
