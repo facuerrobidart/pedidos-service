@@ -42,8 +42,8 @@ jobs:
           file: ./API/Dockerfile
           push: true
           tags: |
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
-            ${{ env.IMAGE_NAME }}:latest
+            pedidos-api:${{ github.sha }}
+            pedidos-api:latest
 
       - name: Deploy Bicep to Azure
         uses: azure/arm-deploy@v1
