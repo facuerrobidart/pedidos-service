@@ -6,7 +6,38 @@ import db from '../database/index.js';
 
 const {Pedido, PedidoItem} = db;
 
-const getAllPedidos = async (estado) => {
+
+//todo: considerar simplificar logica del codigo, veo muchos ifs con su contenido repitiendose
+
+const returnUnicoPedido = (pedido) => {
+    if (!pedido) {
+        return null;
+    }
+
+    if(pedido.estado === 'Confirmado'){
+        return {
+            id: pedido.id,
+            estado: pedido.estado,
+            timestamp: pedido.createdAt,
+            items: pedido.items,
+        };
+    }else{
+        return {
+            id: pedido.id,
+            estado: pedido.estado,
+            timestamp: pedido.createdAt,
+            cliente: {
+                name: pedido.nombreCliente, 
+                direccion: pedido.direccionEntrega,
+                ciudad: pedido.ciudad,
+                telefono: pedido.telefonoCliente
+            },
+            items: pedido.items 
+        };
+    }
+}
+
+export const getAllPedidos = async (estado) => {
     try{
         const pedidos = await Pedido.findAll({
                 where: {estado},
@@ -25,7 +56,7 @@ const getAllPedidos = async (estado) => {
                     items: pedido.items,
                 };
             });
-        }else if(estado === 'Listo para enviar'){
+        }else if(estado === 'Listo para enviar'){ //?Implico que con el resto de estados no se requiere un getAll, al menos que el delivery los requiera
             return pedidos.map(pedido => {
                 return {
                     id: pedido.id,
@@ -48,22 +79,41 @@ const getAllPedidos = async (estado) => {
     }
 }
 
-const getPedido = async (id) => {
+//? En este caso no inclui el timestamp, no lo considere necesario a diferencia del metodo anterior, donde ordenarías en base a la fecha de creación del pedido
+export const getPedido = async (id) => {
     try{
-        return await Pedido.findByPk(id, {
+        const pedido = await Pedido.findByPk(id, {
             include: [{
                 model: PedidoItem,
                 as: 'items'
             }]
         });
+
+        return returnUnicoPedido(pedido);
     }catch (error) {
         console.error("Error al obtener el pedido por ID:", error);
         throw new Error("Error interno del servidor: " + error.message);
     }
 }
 
+export const updatePedido = async (pedido) => {
+    try {
+        const updatedPedido = await Pedido.update(pedido, {
+            where: { id: pedido.id }
+        });
+        
+        return returnUnicoPedido(updatedPedido); //En este caso solo debería acceder al ultimo else del metodo
+    } catch (error) {
+        console.error("Error al actualizar el pedido:", error);
+        throw new Error("Error interno del servidor: " + error.message);
+    }
+}
+
+
+
 export default {
     getAllPedidos,
     getPedido,
+    updatePedido,
     // Aquí puedes agregar más métodos según sea necesario
 };

@@ -5,7 +5,7 @@ import serviceMethods from '../services/pedidosService.js'
 export const getAllPedidosDeposito = async (req, res) => {
     try{
         const pedidos = await serviceMethods.getAllPedidos('Confirmado');
-        if (!pedidos || pedidos.length === 0) {
+        if (!pedidos || pedidos.length === 0) {  //todo: debería probarlo despues xd
             return res.status(404).json({ message: "No se encontraron pedidos en el depósito" });
         }
         res.json(pedidos);
@@ -56,6 +56,13 @@ export const postPedido = async (req, res) => {
 
 export const patchEstadoPedido = async (req, res) => {
     try{
+        const { id } = req.params;
+        const { estado } = req.body;
+        const pedido = await serviceMethods.patchEstadoPedido(id, estado);
+        if (!pedido) {
+            return res.status(404).json({ message: "Pedido no encontrado" });
+        }
+        res.json(pedido); //?Podría devolver simplemente un mensaje
 
     }catch (error) {
         console.error("Error al modificar el estado del pedido:", error);

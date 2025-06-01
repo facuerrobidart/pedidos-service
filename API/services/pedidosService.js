@@ -21,9 +21,28 @@ export const getPedidoById = async (id) => {
         if (!pedido) {
             return null;
         }
-        return new pedidoDepositoDTO(pedido);
+        if(pedido.estado === 'Confirmado') {
+            return new pedidoDepositoDTO(pedido);   
+        }
+        return new pedidoDeliveryDTO(pedido);
     } catch (error) {
         console.error("Error al obtener el pedido por ID:", error);
+        throw new Error("Error interno del servidor: " + error.message);
+    }
+}
+
+export const patchEstadoPedido = async (id, estado) => {
+    try {
+        const pedido = await repositoryMethods.getPedido(id);
+        if (!pedido) {
+            return null;
+        }
+        pedido.estado = estado;
+        await repositoryMethods.updatePedido(pedido);
+        return new pedidoDeliveryDTO(pedido); //Siendo que el estado base es "Confirmado", cualquier estado al que cambie ya es problema del delivery
+        
+    } catch (error) {
+        console.error("Error al modificar el estado del pedido:", error);
         throw new Error("Error interno del servidor: " + error.message);
     }
 }
@@ -31,5 +50,6 @@ export const getPedidoById = async (id) => {
 export default {
     getAllPedidos,
     getPedidoById,
+    patchEstadoPedido,
     // Aquí puedes agregar más métodos según sea necesario
 };
