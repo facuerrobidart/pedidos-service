@@ -6,7 +6,7 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: false,  //?El id debería venir de virtual pet?
+        autoIncrement: true,
         allowNull: false
       },
       nombreCliente: {
