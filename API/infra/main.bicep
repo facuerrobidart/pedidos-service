@@ -1,12 +1,14 @@
 @description('Name of the container app')
 param appName string = 'pedidos-api'
 
-@description('Container image to deploy, e.g. myrepo/myimage:tag')
+@description('Container image to deploy in format: ghcr.io/owner/repo:tag')
 param dockerImage string
 
 @description('Location for deployment')
 param location string = resourceGroup().location
 
+@secure()
+param githubToken string
 
 @secure()
 param dbPassword string
@@ -36,6 +38,19 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         targetPort: 3000 // change to your app's exposed port
         transport: 'auto'
       }
+      registries: [
+        {
+          server: 'ghcr.io'
+          username: '${githubToken}'
+          passwordSecretRef: 'github-token'
+        }
+      ]
+      secrets: [
+        {
+          name: 'github-token'
+          value: githubToken
+        }
+      ]
     }
     template: {
       containers: [

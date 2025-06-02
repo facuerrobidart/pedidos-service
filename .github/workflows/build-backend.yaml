@@ -39,6 +39,7 @@ jobs:
       - name: Set lowercase image name
         run: |
           echo "IMAGE_NAME=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/pedidos-api" >> $GITHUB_ENV
+          echo "Using image: ${{ env.IMAGE_NAME }}"
       
       - name: Build and push Docker image to GHCR
         uses: docker/build-push-action@v5
@@ -59,6 +60,7 @@ jobs:
           parameters: >
             appName=pedidos-service-api
             dockerImage=${{ env.IMAGE_NAME }}:${{ github.sha }}
+            githubToken=${{ secrets.GITHUB_TOKEN }}
             dbUser=${{ secrets.DB_USER }}
             dbPassword=${{ secrets.DB_PASSWORD }}
             dbName=${{ secrets.DB_NAME }}
