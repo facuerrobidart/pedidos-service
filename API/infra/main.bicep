@@ -23,6 +23,10 @@ param rabbitmqHost string
 param rabbitmqPort string = '5672'
 param rabbitmqQueue string = 'pedidos-updates'
 
+@secure()
+param ghcrUsername string
+@secure()
+param ghcrPassword string
 
 resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
   name: appName
@@ -35,6 +39,19 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         targetPort: 3000 // change to your app's exposed port
         transport: 'auto'
       }
+      registries: [
+        {
+          server: 'ghcr.io'
+          username: ghcrUsername
+          passwordSecretRef: 'ghcr-password'
+        }
+      ]
+      secrets: [
+        {
+          name: 'ghcr-password'
+          value: ghcrPassword
+        }
+      ]
     }
     template: {
       containers: [

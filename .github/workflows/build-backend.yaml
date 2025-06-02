@@ -69,5 +69,7 @@ jobs:
             rabbitmqHost=${{ secrets.RABBITMQ_HOST }}
             rabbitmqPort=${{ secrets.RABBITMQ_PORT }}
             rabbitmqQueue=deliveries-queue
+            ghcrUsername=${{ github.actor }}
+            ghcrPassword=${{ secrets.GITHUB_TOKEN }}
 
         
