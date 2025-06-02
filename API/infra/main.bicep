@@ -8,9 +8,6 @@ param dockerImage string
 param location string = resourceGroup().location
 
 @secure()
-param githubToken string
-
-@secure()
 param dbPassword string
 @secure()
 param dbUser string
@@ -38,19 +35,6 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
         targetPort: 3000 // change to your app's exposed port
         transport: 'auto'
       }
-      registries: [
-        {
-          server: 'ghcr.io'
-          username: githubToken
-          passwordSecretRef: 'github-token'
-        }
-      ]
-      secrets: [
-        {
-          name: 'github-token'
-          value: githubToken
-        }
-      ]
     }
     template: {
       containers: [

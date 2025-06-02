@@ -60,7 +60,6 @@ jobs:
           parameters: >
             appName=pedidos-service-api
             dockerImage=${{ env.IMAGE_NAME }}:${{ github.sha }}
-            githubToken=${{ secrets.GITHUB_TOKEN }}
             dbUser=${{ secrets.DB_USER }}
             dbPassword=${{ secrets.DB_PASSWORD }}
             dbName=${{ secrets.DB_NAME }}
