@@ -41,7 +41,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
       registries: [
         {
           server: 'ghcr.io'
-          username: '${githubToken}'
+          username: githubToken
           passwordSecretRef: 'github-token'
         }
       ]
