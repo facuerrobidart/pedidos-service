@@ -5,7 +5,7 @@ import config from '../config/config.cjs';
 const db = {};
 const envConfig = config[env]
 
-import PedidoModel from './models/Pedido.js';
+import PedidoModel from './models/pedido.js';
 import PedidoItemModel from './models/pedidoItem.js';
 
 
