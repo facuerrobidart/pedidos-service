@@ -28,8 +28,7 @@ export default (sequelize, DataTypes) => {
         },
         repartidorAsignado:{
             type: DataTypes.INTEGER,
-            defaultValue: -1, //-1 indica que no hay repartidor asignado
-            allowNull: false
+            allowNull: true,
         }
     });
 }; 

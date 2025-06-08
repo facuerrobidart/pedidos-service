@@ -10,6 +10,7 @@ import cors from 'cors'
 
 import pedidosRoutes from './routes/pedidosRoute.js';
 import healthRoutes from './routes/healthRoute.js';
+import authRoutes from './routes/authRoute.js';
 
 const force = false;  //reiniciar db
 const alter = false; //aplicar cambios en estructura
@@ -40,7 +41,7 @@ app.use(morgan('dev')); // Logs de solicitudes HTTP en consola
 app.use(express.json()); // Habilitar JSON en el body de las requests
 app.use(express.urlencoded({ extended: true })); // Soporte para datos de formularios
 
-
+app.use('/api/auth', authRoutes);
 app.use('/pedidos', pedidosRoutes);
 app.use('/health', healthRoutes);
 

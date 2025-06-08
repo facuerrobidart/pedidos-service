@@ -1,4 +1,5 @@
 import serviceMethods from '../services/pedidosService.js'
+import { validarIdRepartidor } from '../services/usersService.js';
 
 //Metodos relacionados al deposito
 
@@ -27,8 +28,18 @@ export const getAllPedidosDelivery = async (req, res) => {
     }
 }
 
-export const postPedido = async (req, res) => {
+export const asignarPedido = async (req, res) => {
     try{
+        const { id } = req.params;
+        const { repartidorId } = req.body; 
+
+        validarIdRepartidor(repartidorId); //En caso de que el id no sea valido, lanza error, asi que no es necesario validar el resultado
+
+        const pedido = await serviceMethods.asignarPedido(id, repartidorId);
+        if (!pedido) {
+            return res.status(404).json({ message: "Pedido no encontrado" });
+        }
+        res.json(pedido);
 
     }catch (error) {
         console.error("Error al crear el pedido:", error);
@@ -70,11 +81,27 @@ export const patchEstadoPedido = async (req, res) => {
     }
 }
 
+export const getPedidosByRepartidor = async (req, res) => {
+    try{
+        const { id } = req.params;
+        const pedidos = await serviceMethods.getPedidosByRepartidor(id);
+        if (!pedidos || pedidos.length === 0) {
+            return res.status(404).json({ message: "No se encontraron pedidos para el repartidor" });
+        }
+        res.json(pedidos);
+
+    }catch (error) {
+        console.error("Error al obtener pedidos por repartidor:", error);
+        res.status(500).json({ message: "Error interno del servidor", error: error.message });
+    }
+}
+
 export default {
     getAllPedidosDeposito,
     getPedidoById,
     getAllPedidosDelivery,
-    postPedido,
-    patchEstadoPedido
+    asignarPedido,
+    patchEstadoPedido,
+    getPedidosByRepartidor
 
 };

@@ -104,11 +104,42 @@ export const updatePedido = async (pedido) => {
     }
 }
 
+export const getPedidosByRepartidor = async (repartidorId) => {
+    try {
+        const pedidos = await Pedido.findAll({
+            where: { repartidorAsignado: repartidorId },
+            include: [{
+                model: PedidoItem,
+                as: 'items'
+            }]
+        });
+
+        return pedidos.map(pedido => {
+            return {
+                id: pedido.id,
+                estado: pedido.estado,
+                timestamp: pedido.createdAt,
+                cliente: {
+                    name: pedido.nombreCliente, 
+                    direccion: pedido.direccionEntrega,
+                    ciudad: pedido.ciudad,
+                    telefono: pedido.telefonoCliente
+                },
+                items: pedido.items 
+            };
+        });
+    } catch (error) {
+        console.error("Error al obtener pedidos por repartidor:", error);
+        throw new Error("Error interno del servidor: " + error.message);
+    }
+}
+
 
 
 export default {
     getAllPedidos,
     getPedido,
     updatePedido,
+    getPedidosByRepartidor
     // Aquí puedes agregar más métodos según sea necesario
 };

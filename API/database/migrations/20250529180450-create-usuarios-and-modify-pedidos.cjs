@@ -37,8 +37,7 @@ module.exports = {
     // Agregar columna repartidorAsignado a Pedidos y definirla como FK
     await queryInterface.addColumn('Pedidos', 'repartidorAsignado', {
       type: Sequelize.INTEGER,
-      allowNull: false,
-      defaultValue: -1,
+      allowNull: true,
       references: {
         model: 'Usuarios',
         key: 'id'

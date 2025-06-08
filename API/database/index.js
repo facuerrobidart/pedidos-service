@@ -7,6 +7,7 @@ const envConfig = config[env]
 
 import PedidoModel from './models/pedido.js';
 import PedidoItemModel from './models/pedidoItem.js';
+import UsuariosModel from './models/usuarios.js';
 
 
 const sequelize = new Sequelize({
@@ -28,6 +29,7 @@ Aca debería ir toda la logica de la base de datos, como la creación de modelos
 
 const Pedido = PedidoModel(sequelize, DataTypes);
 const PedidoItem = PedidoItemModel(sequelize, DataTypes);
+const Usuario = UsuariosModel(sequelize, DataTypes);
 
 Pedido.hasMany(PedidoItem, {
   foreignKey: 'idPedido',
@@ -39,9 +41,20 @@ PedidoItem.belongsTo(Pedido, {
   as: 'pedido'
 });
 
+Usuario.hasMany(Pedido, {
+  foreignKey: 'repartidorAsignado',
+  as: 'pedidos'
+});
+
+Pedido.belongsTo(Usuario, {
+  foreignKey: 'repartidorAsignado',
+  as: 'usuario',
+});
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 db.Pedido = Pedido;
 db.PedidoItem = PedidoItem;
+db.Usuario = Usuario;
 
 export default db;
