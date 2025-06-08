@@ -25,6 +25,11 @@ export default (sequelize, DataTypes) => {
             type:DataTypes.ENUM('Confirmado','Listo para enviar','Entregado','Entrega cancelada'),
             defaultValue: 'Confirmado',
             allowNull: false
+        },
+        repartidorAsignado:{
+            type: DataTypes.INTEGER,
+            defaultValue: -1, //-1 indica que no hay repartidor asignado
+            allowNull: false
         }
     });
 }; 
