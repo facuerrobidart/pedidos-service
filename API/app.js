@@ -42,8 +42,8 @@ app.use(express.json()); // Habilitar JSON en el body de las requests
 app.use(express.urlencoded({ extended: true })); // Soporte para datos de formularios
 
 app.use('/api/auth', authRoutes);
-app.use('/pedidos', pedidosRoutes);
-app.use('/health', healthRoutes);
+app.use('/api/pedidos', pedidosRoutes);
+app.use('/api/health', healthRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {
