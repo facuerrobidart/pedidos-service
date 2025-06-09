@@ -31,6 +31,7 @@ jobs:
           run: npx sequelize-cli db:migrate
           working-directory: ./API
         
-        - name: Run seeders
-          run: npx sequelize-cli db:seed:all
-          working-directory: ./API
+        # We don't have any seeders yet, so this fails if we run it
+        #- name: Run seeders
+        #  run: npx sequelize-cli db:seed:all
+        #  working-directory: ./API
