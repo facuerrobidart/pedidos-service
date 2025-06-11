@@ -9,7 +9,14 @@ class RabbitMQService {
 
     async connect() {
         try {
-            const url = `amqp://${process.env.RABBITMQ_USER}:${process.env.RABBITMQ_PASSWORD}@${process.env.RABBITMQ_HOST}:${process.env.RABBITMQ_PORT}`;
+            const defaultConfig = { // Para conectarse en local
+                user: 'guest',
+                password: 'guest',
+                host: 'localhost',
+                port: '5672'
+            };
+
+            const url = `amqp://${process.env.RABBITMQ_USER || defaultConfig.user}:${process.env.RABBITMQ_PASSWORD || defaultConfig.password}@${process.env.RABBITMQ_HOST || defaultConfig.host}:${process.env.RABBITMQ_PORT || defaultConfig.port}`;
             this.connection = await amqp.connect(url);
             this.channel = await this.connection.createChannel();
             

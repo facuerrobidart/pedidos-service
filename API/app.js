@@ -11,6 +11,7 @@ import cors from 'cors'
 import pedidosRoutes from './routes/pedidosRoute.js';
 import healthRoutes from './routes/healthRoute.js';
 import authRoutes from './routes/authRoute.js';
+import rabbitmqRoutes from './routes/rabbitmqRoute.js';
 
 const force = false;  //reiniciar db
 const alter = false; //aplicar cambios en estructura
@@ -44,6 +45,7 @@ app.use(express.urlencoded({ extended: true })); // Soporte para datos de formul
 app.use('/api/auth', authRoutes);
 app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/health', healthRoutes);
+app.use('/api/rabbitmq', rabbitmqRoutes);
 
 // Middleware para manejar rutas no encontradas
 app.use((req, res, next) => {

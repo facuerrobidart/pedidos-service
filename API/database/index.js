@@ -11,10 +11,11 @@ import UsuariosModel from './models/usuarios.js';
 
 
 const sequelize = new Sequelize({
-  database: config.development.database, 
-  user: config.development.username, 
-  password: config.development.password,
-  host: config.development.host,
+  database: envConfig.database, 
+  user: envConfig.username, 
+  password: envConfig.password,
+  host: envConfig.host,
+  port: envConfig.port,
   dialect: "postgres",
   timezone: 'America/Argentina/Buenos_Aires',
   // dialectOptions: {
