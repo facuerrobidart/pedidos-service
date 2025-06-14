@@ -1,6 +1,7 @@
 import repositoryMethods from '../repositories/pedidosRepository.js';
 import pedidoDepositoDTO from '../DTOs/pedidoDepositoDTO.js';
 import pedidoDeliveryDTO from '../DTOs/pedidoDeliveryDTO.js';
+import { rabbitMQService } from './rabbitmq.service.js';
 
 export const getAllPedidos = async (estado) => {
     try {
@@ -39,6 +40,16 @@ export const patchEstadoPedido = async (id, estado) => {
         }
         pedido.estado = estado;
         await repositoryMethods.updatePedido(pedido);
+
+        // Publish event to RabbitMQ
+        const eventMessage = {
+            pedidoId: id,
+            nuevoEstado: estado,
+            type: 'status_update',
+            timestamp: new Date().toISOString()
+        };
+        await rabbitMQService.publishMessage('deliveries-queue', eventMessage);
+
         return new pedidoDeliveryDTO(pedido); //Siendo que el estado base es "Confirmado", cualquier estado al que cambie ya es problema del delivery
         
     } catch (error) {

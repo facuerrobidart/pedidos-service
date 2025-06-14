@@ -6,6 +6,7 @@ class PedidoDeliveryDTO{
             nombre: String(item.nombre), 
             cantidad: item.PedidoItem ? Number(item.PedidoItem.cantidad) : Number(item.cantidad),
         })) : [];
+        console.log(cliente);
         this.cliente = {
             nombre: cliente.name,
             direccion: String(cliente.direccion), 

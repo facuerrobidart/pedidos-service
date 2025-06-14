@@ -101,7 +101,6 @@ export const createPedido = async (req, res) => {
     try {
         const { nombreCliente, direccionEntrega, ciudad, telefonoCliente } = req.body;
         
-        console.log("RECIBIDO: ", req.body)
         // Validate required fields
         if (!nombreCliente || !direccionEntrega || !ciudad || !telefonoCliente) {
             console.log("faltan campos");
