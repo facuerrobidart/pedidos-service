@@ -134,12 +134,21 @@ export const getPedidosByRepartidor = async (repartidorId) => {
     }
 }
 
-
+export const createPedido = async (pedidoData) => {
+    try {
+        const pedido = await Pedido.create(pedidoData);
+        return returnUnicoPedido(pedido);
+    } catch (error) {
+        console.error("Error al crear el pedido:", error);
+        throw new Error("Error interno del servidor: " + error.message);
+    }
+}
 
 export default {
     getAllPedidos,
     getPedido,
     updatePedido,
-    getPedidosByRepartidor
+    getPedidosByRepartidor,
+    createPedido
     // Aquí puedes agregar más métodos según sea necesario
 };

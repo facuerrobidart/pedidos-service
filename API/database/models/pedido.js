@@ -3,7 +3,7 @@ export default (sequelize, DataTypes) => {
         id: {     //?No sabría si deberiamos darle el id de VirtualPet o si simplemente le damos uno nuevo aca.
             type: DataTypes.INTEGER,
             primaryKey: true,
-            autoIncrement: false    //? Pongo falso asumiendo que traemos el id de VirtualPet.
+            autoIncrement: true    // Let the database generate IDs automatically
         },
         nombreCliente: {
             type: DataTypes.STRING,

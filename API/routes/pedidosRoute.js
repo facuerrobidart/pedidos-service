@@ -28,4 +28,8 @@ router.route('/delivery/:id')
 router.route('/delivery/repartidor/:id')
   .get(metodosPedidos.getPedidosByRepartidor) // Obtener pedidos asignados a un repartidor específico
 
+//Ruta para crear pedidos desde virtual pet (o cualquier servicio de terceros)
+router.route('/')
+  .post(metodosPedidos.createPedido) // Crear un nuevo pedido
+
 export default router;

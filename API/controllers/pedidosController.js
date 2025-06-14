@@ -1,5 +1,6 @@
 import serviceMethods from '../services/pedidosService.js'
 import { validarIdRepartidor } from '../services/usersService.js';
+import db from '../database/index.js';
 
 //Metodos relacionados al deposito
 
@@ -96,12 +97,47 @@ export const getPedidosByRepartidor = async (req, res) => {
     }
 }
 
+export const createPedido = async (req, res) => {
+    try {
+        const { nombreCliente, direccionEntrega, ciudad, telefonoCliente } = req.body;
+        
+        console.log("RECIBIDO: ", req.body)
+        // Validate required fields
+        if (!nombreCliente || !direccionEntrega || !ciudad || !telefonoCliente) {
+            console.log("faltan campos");
+            return res.status(400).json({ 
+                message: "Faltan campos requeridos",
+                required: ['nombreCliente', 'direccionEntrega', 'ciudad', 'telefonoCliente']
+            });
+        }
+
+        // Get max ID and increment it
+        const maxIdResult = await db.Pedido.max('id');
+        const id = (maxIdResult || 0) + 1;
+
+        const pedido = await serviceMethods.createPedido({
+            id,
+            nombreCliente,
+            direccionEntrega,
+            ciudad,
+            telefonoCliente,
+            estado: 'Confirmado',
+            repartidorAsignado: null
+        });
+
+        res.status(201).json(pedido);
+    } catch (error) {
+        console.error("Error al crear el pedido:", error);
+        res.status(500).json({ message: "Error interno del servidor", error: error.message });
+    }
+}
+
 export default {
     getAllPedidosDeposito,
     getPedidoById,
     getAllPedidosDelivery,
     asignarPedido,
     patchEstadoPedido,
-    getPedidosByRepartidor
-
+    getPedidosByRepartidor,
+    createPedido
 };
