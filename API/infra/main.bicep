@@ -51,6 +51,10 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
       ]
     }
     template: {
+      scale:  {
+        minReplicas: 1
+        maxReplicas: 1
+      }
       containers: [
         {
           name: 'api'
