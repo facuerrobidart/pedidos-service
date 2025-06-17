@@ -22,7 +22,7 @@ export default (sequelize, DataTypes) => {
             allowNull: false
         },
         estado:{
-            type:DataTypes.ENUM('Confirmado','Listo para enviar','Entregado','Entrega cancelada'),
+            type:DataTypes.ENUM('Confirmado','Listo para enviar','Entregado','Entrega cancelada', 'En camino'),
             defaultValue: 'Confirmado',
             allowNull: false
         },
