@@ -13,7 +13,6 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
     try {
-        console.log("Login request body:", req.body);
         const { username, password } = req.body;
 
         const user = await userService.loginUser(username, password);
