@@ -10,27 +10,19 @@ const returnUnicoPedido = (pedido) => {
         return null;
     }
 
-    if(pedido.estado === 'Confirmado'){
-        return {
-            id: pedido.id,
-            estado: pedido.estado,
-            timestamp: pedido.createdAt,
-            items: pedido.items,
-        };
-    }else{
-        return {
-            id: pedido.id,
-            estado: pedido.estado,
-            timestamp: pedido.createdAt,
-            cliente: {
-                name: pedido.nombreCliente, 
-                direccion: pedido.direccionEntrega,
-                ciudad: pedido.ciudad,
-                telefono: pedido.telefonoCliente
-            },
-            items: pedido.items 
-        };
-    }
+    
+    return {
+        id: pedido.id,
+        estado: pedido.estado,
+        timestamp: pedido.createdAt,
+        items: pedido.items,
+        cliente: {
+            name: pedido.nombreCliente, 
+            direccion: pedido.direccionEntrega,
+            ciudad: pedido.ciudad,
+            telefono: pedido.telefonoCliente
+        }
+    };
 }
 
 export const getAllPedidos = async (estado) => {
