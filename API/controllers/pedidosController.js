@@ -6,7 +6,7 @@ import db from '../database/index.js';
 
 export const getAllPedidosDeposito = async (req, res) => {
     try{
-        const pedidos = await serviceMethods.getAllPedidos('Confirmado');
+        const pedidos = await serviceMethods.getAllPedidos('confirmado');
         if (!pedidos || pedidos.length === 0) {  //todo: debería probarlo despues xd
             return res.status(404).json({ message: "No se encontraron pedidos en el depósito" });
         }
@@ -21,7 +21,11 @@ export const getAllPedidosDeposito = async (req, res) => {
 
 export const getAllPedidosDelivery = async (req, res) => {
     try{
-        const pedidos = await serviceMethods.getAllPedidos('Listo para enviar');
+        //const deliveryId = req.query.id; 
+        const pedidos = await serviceMethods.getAllPedidos('listo para enviar');
+        //const pedidosDelivery = await serviceMethods.getAllPedidos('En camino'); 
+        //pedidosDelivery.filter(pedido => pedido.repartidorAsignado === deliveryId); // Filtrar pedidos asignados al repartidor
+        //const pedidos = [...pedidosListos, ...pedidosDelivery]; // Combinar ambos arrays
         res.json(pedidos);
     }catch (error) {
         console.error("Error al obtener pedidos de delivery:", error);
@@ -33,7 +37,7 @@ export const asignarPedido = async (req, res) => {
     try{
         const { id } = req.params;
         const { repartidorId } = req.body; 
-
+    
         validarIdRepartidor(repartidorId); //En caso de que el id no sea valido, lanza error, asi que no es necesario validar el resultado
 
         const pedido = await serviceMethods.asignarPedido(id, repartidorId);
@@ -50,15 +54,14 @@ export const asignarPedido = async (req, res) => {
 
 //Metodos comunes a ambos
 
-export const getPedidoById = async (req, res) => {
+export const getPedidoById = async (req, res) => { //!grego, te cambio esto, ahora trae pedidos por id de repartidor, no toques nada pq me mato
     try{
-        const { id } = req.params;
-        console.log("ID del pedido recibido:", id);
-        const pedido = await serviceMethods.getPedidoById(id);
-        if (!pedido) {
-            return res.status(404).json({ message: "Pedido no encontrado" });
-        }
-        res.json(pedido);
+        const { id } = req.params; // ID del pedido
+        const pedidosListos = await serviceMethods.getAllPedidos('listo para enviar') || [];
+        let pedidosDelivery = await serviceMethods.getAllPedidos('en camino') || []; 
+        pedidosDelivery = pedidosDelivery.filter(pedido => pedido.repartidorAsignado == id); // Filtrar pedidos asignados al repartidor
+        const pedidos = [...pedidosListos, ...pedidosDelivery]; // Combinar ambos arrays
+        res.json(pedidos);
 
     }catch (error) {
         console.error("Error al obtener el pedido por ID:", error);
@@ -69,8 +72,12 @@ export const getPedidoById = async (req, res) => {
 export const patchEstadoPedido = async (req, res) => {
     try{
         const { id } = req.params;
-        const { estado } = req.body;
+        const { estado, usuarioId } = req.body;
+        const deliveryId = usuarioId //para menos cambios despues
         const pedido = await serviceMethods.patchEstadoPedido(id, estado);
+        if (estado === 'en camino' && deliveryId) { 
+            await serviceMethods.asignarPedido(id, deliveryId)
+        } 
         if (!pedido) {
             return res.status(404).json({ message: "Pedido no encontrado" });
         }

@@ -35,7 +35,7 @@ export const getAllPedidos = async (estado) => {
                 }]
             });
 
-        if(estado === 'Confirmado'){
+        if(estado === 'confirmado'){
             return pedidos.map(pedido => {
                 return {
                     id: pedido.id,
@@ -44,7 +44,7 @@ export const getAllPedidos = async (estado) => {
                     items: pedido.items,
                 };
             });
-        }else if(estado === 'Listo para enviar'){ //?Implico que con el resto de estados no se requiere un getAll, al menos que el delivery los requiera
+        }else if(estado === 'listo para enviar' || estado === 'en camino'){ //?Implico que con el resto de estados no se requiere un getAll, al menos que el delivery los requiera
             return pedidos.map(pedido => {
                 return {
                     id: pedido.id,
@@ -56,7 +56,8 @@ export const getAllPedidos = async (estado) => {
                         ciudad: pedido.ciudad,
                         telefono: pedido.telefonoCliente
                     },
-                    items: pedido.items 
+                    items: pedido.items,
+                    repartidorAsignado: pedido.repartidorAsignado || null 
                 };
             });
         }

@@ -6,10 +6,11 @@ import { rabbitMQService } from './rabbitmq.service.js';
 export const getAllPedidos = async (estado) => {
     try {
         const pedidos = await repositoryMethods.getAllPedidos(estado);
-        if(estado === 'Confirmado') {
-            return pedidos.map(pedido => new pedidoDepositoDTO(pedido));   
+        
+        if(estado === 'confirmado') {
+            return pedidos?.map(pedido => new pedidoDepositoDTO(pedido));   
         }
-        return pedidos.map(pedido => new pedidoDeliveryDTO(pedido));
+        return pedidos?.map(pedido => new pedidoDeliveryDTO(pedido));
     } catch (error) {
         console.error("Error al obtener pedidos del depósito:", error);
         throw new Error("Error interno del servidor: " + error.message);
@@ -22,7 +23,7 @@ export const getPedidoById = async (id) => {
         if (!pedido) {
             return null;
         }
-        if(pedido.estado === 'Confirmado') {
+        if(pedido.estado === 'confirmado') {
             return new pedidoDepositoDTO(pedido);   
         }
         return new pedidoDeliveryDTO(pedido);
@@ -41,14 +42,14 @@ export const patchEstadoPedido = async (id, estado) => {
         pedido.estado = estado;
         await repositoryMethods.updatePedido(pedido);
 
-        // Publish event to RabbitMQ
-        const eventMessage = {
-            pedidoId: id,
-            nuevoEstado: estado,
-            type: 'status_update',
-            timestamp: new Date().toISOString()
-        };
-        await rabbitMQService.publishMessage('deliveries-queue', eventMessage);
+        // Publish event to RabbitMQ //!grego, esto se rompio, no se pq, suerte! :)
+        // const eventMessage = {
+        //     pedidoId: id,
+        //     nuevoEstado: estado,
+        //     type: 'status_update',
+        //     timestamp: new Date().toISOString()
+        // };
+        // await rabbitMQService.publishMessage('deliveries-queue', eventMessage);
 
         return new pedidoDeliveryDTO(pedido); //Siendo que el estado base es "Confirmado", cualquier estado al que cambie ya es problema del delivery
         
