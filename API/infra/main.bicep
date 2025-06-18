@@ -33,7 +33,7 @@ resource containerApp 'Microsoft.App/containerApps@2023-05-01' = {
     configuration: {
       ingress: {
         external: true
-        targetPort: 3000 // change to your app's exposed port
+        targetPort: 3003 // change to your app's exposed port
         transport: 'auto'
       }
       registries: [
