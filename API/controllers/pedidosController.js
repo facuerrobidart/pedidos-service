@@ -21,7 +21,11 @@ export const getAllPedidosDeposito = async (req, res) => {
 
 export const getAllPedidosDelivery = async (req, res) => {
     try{
-        const pedidos = await serviceMethods.getAllPedidos('Listo para enviar');
+        const deliveryId = req.query.id; 
+        const pedidosListos = await serviceMethods.getAllPedidos('Listo para enviar');
+        const pedidosDelivery = await serviceMethods.getAllPedidos('En camino'); 
+        pedidosDelivery.filter(pedido => pedido.repartidorAsignado === deliveryId); // Filtrar pedidos asignados al repartidor
+        const pedidos = [...pedidosListos, ...pedidosDelivery]; // Combinar ambos arrays
         res.json(pedidos);
     }catch (error) {
         console.error("Error al obtener pedidos de delivery:", error);
@@ -69,8 +73,11 @@ export const getPedidoById = async (req, res) => {
 export const patchEstadoPedido = async (req, res) => {
     try{
         const { id } = req.params;
-        const { estado } = req.body;
+        const { estado, deliveryId } = req.body;
         const pedido = await serviceMethods.patchEstadoPedido(id, estado);
+        if (estado === 'En camino' && deliveryId) { 
+            await serviceMethods.asignarPedido(id, deliveryId)
+        } 
         if (!pedido) {
             return res.status(404).json({ message: "Pedido no encontrado" });
         }

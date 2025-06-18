@@ -42,12 +42,12 @@ export const loginUser = async (email, password) => {
             return null; 
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return null; 
+        //const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (user.password == password) {
+            return user; 
+        } else { 
+            return null;
         }
-
-        return user; 
     } catch (error) {
         console.error("Error finding user:", error);
         throw new Error("Error finding user: " + error.message);
