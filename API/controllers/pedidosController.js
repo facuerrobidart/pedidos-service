@@ -7,10 +7,7 @@ import db from '../database/index.js';
 export const getAllPedidosDeposito = async (req, res) => {
     try{
         const pedidos = await serviceMethods.getAllPedidos('confirmado');
-        if (!pedidos || pedidos.length === 0) {  //todo: debería probarlo despues xd
-            return res.status(404).json({ message: "No se encontraron pedidos en el depósito" });
-        }
-        res.json(pedidos);
+        res.json(pedidos || []);
     }catch (error) {
         console.error("Error al obtener pedidos del depósito:", error);
         res.status(500).json({ message: "Error interno del servidor", error: error.message });
