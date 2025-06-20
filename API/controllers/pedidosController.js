@@ -127,7 +127,7 @@ export const createPedido = async (req, res) => {
             direccionEntrega,
             ciudad,
             telefonoCliente,
-            estado: 'Confirmado',
+            estado: 'confirmado',
             repartidorAsignado: null
         });
 

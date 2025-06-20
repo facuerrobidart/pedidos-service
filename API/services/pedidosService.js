@@ -42,14 +42,14 @@ export const patchEstadoPedido = async (id, estado) => {
         pedido.estado = estado;
         await repositoryMethods.updatePedido(pedido);
 
-        // Publish event to RabbitMQ //!grego, esto se rompio, no se pq, suerte! :)
-        // const eventMessage = {
-        //     pedidoId: id,
-        //     nuevoEstado: estado,
-        //     type: 'status_update',
-        //     timestamp: new Date().toISOString()
-        // };
-        // await rabbitMQService.publishMessage('deliveries-queue', eventMessage);
+        // Publish event to RabbitMQ
+         const eventMessage = {
+             pedidoId: id,
+             nuevoEstado: estado,
+             type: 'status_update',
+             timestamp: new Date().toISOString()
+         };
+        rabbitMQService.publishMessage('deliveries-queue', eventMessage);
 
         return new pedidoDeliveryDTO(pedido); //Siendo que el estado base es "Confirmado", cualquier estado al que cambie ya es problema del delivery
         
