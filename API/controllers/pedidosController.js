@@ -103,7 +103,7 @@ export const getPedidosByRepartidor = async (req, res) => {
 
 export const createPedido = async (req, res) => {
     try {
-        const { nombreCliente, direccionEntrega, ciudad, telefonoCliente } = req.body;
+        const { nombreCliente, direccionEntrega, ciudad, telefonoCliente, items } = req.body;
         
         // Validate required fields
         if (!nombreCliente || !direccionEntrega || !ciudad || !telefonoCliente) {
@@ -125,7 +125,8 @@ export const createPedido = async (req, res) => {
             ciudad,
             telefonoCliente,
             estado: 'confirmado',
-            repartidorAsignado: null
+            repartidorAsignado: null,
+            items
         });
 
         res.status(201).json(pedido);

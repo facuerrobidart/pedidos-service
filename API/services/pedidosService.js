@@ -2,6 +2,7 @@ import repositoryMethods from '../repositories/pedidosRepository.js';
 import pedidoDepositoDTO from '../DTOs/pedidoDepositoDTO.js';
 import pedidoDeliveryDTO from '../DTOs/pedidoDeliveryDTO.js';
 import { rabbitMQService } from './rabbitmq.service.js';
+import db from '../database/index.js'; // Import db for sequelize and models
 
 export const getAllPedidos = async (estado) => {
     try {
@@ -85,10 +86,27 @@ export const getPedidosByRepartidor = async (repartidorId) => {
 }
 
 export const createPedido = async (pedidoData) => {
+    const { items, ...pedidoFields } = pedidoData;
+    const transaction = await db.sequelize.transaction();
     try {
-        const pedido = await repositoryMethods.createPedido(pedidoData);
-        return new pedidoDepositoDTO(pedido); // Since it starts as 'Confirmado', we use pedidoDepositoDTO
+        // Create the pedido
+        const pedido = await repositoryMethods.createPedido(pedidoFields, { transaction });
+        // Create items if provided
+        if (items && Array.isArray(items) && items.length > 0) {
+            for (const item of items) {
+                await db.PedidoItem.create({
+                    idPedido: pedido.id,
+                    nombre: item.nombre,
+                    cantidad: item.cantidad
+                }, { transaction });
+            }
+        }
+        await transaction.commit();
+        // Fetch pedido with items for DTO
+        const pedidoWithItems = await repositoryMethods.getPedido(pedido.id);
+        return new pedidoDepositoDTO(pedidoWithItems);
     } catch (error) {
+        await transaction.rollback();
         console.error("Error al crear el pedido:", error);
         throw new Error("Error interno del servidor: " + error.message);
     }

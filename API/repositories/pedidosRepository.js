@@ -127,9 +127,9 @@ export const getPedidosByRepartidor = async (repartidorId) => {
     }
 }
 
-export const createPedido = async (pedidoData) => {
+export const createPedido = async (pedidoData, options = {}) => {
     try {
-        const pedido = await Pedido.create(pedidoData);
+        const pedido = await Pedido.create(pedidoData, options);
         return returnUnicoPedido(pedido);
     } catch (error) {
         console.error("Error al crear el pedido:", error);
