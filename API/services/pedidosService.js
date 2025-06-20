@@ -87,26 +87,26 @@ export const getPedidosByRepartidor = async (repartidorId) => {
 
 export const createPedido = async (pedidoData) => {
     const { items, ...pedidoFields } = pedidoData;
-    const transaction = await db.sequelize.transaction();
     try {
-        // Create the pedido
-        const pedido = await repositoryMethods.createPedido(pedidoFields, { transaction });
-        // Create items if provided
-        if (items && Array.isArray(items) && items.length > 0) {
-            for (const item of items) {
-                await db.PedidoItem.create({
-                    idPedido: pedido.id,
-                    nombre: item.nombre,
-                    cantidad: item.cantidad
-                }, { transaction });
+        const pedido = await db.sequelize.transaction(async (transaction) => {
+            // Create the pedido
+            const pedido = await repositoryMethods.createPedido(pedidoFields, { transaction });
+            // Create items if provided
+            if (items && Array.isArray(items) && items.length > 0) {
+                for (const item of items) {
+                    await db.PedidoItem.create({
+                        idPedido: pedido.id,
+                        nombre: item.nombre,
+                        cantidad: item.cantidad
+                    }, { transaction });
+                }
             }
-        }
-        await transaction.commit();
+            return pedido;
+        });
         // Fetch pedido with items for DTO
         const pedidoWithItems = await repositoryMethods.getPedido(pedido.id);
         return new pedidoDepositoDTO(pedidoWithItems);
     } catch (error) {
-        await transaction.rollback();
         console.error("Error al crear el pedido:", error);
         throw new Error("Error interno del servidor: " + error.message);
     }
